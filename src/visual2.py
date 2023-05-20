@@ -1,25 +1,14 @@
 # %%
 import tensorflow as tf
-import keras
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.applications import VGG16
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
-import io
-from PIL import Image
-import os
-import matplotlib.pyplot as plt
-import numpy as np
+from tensorflow.keras.layers import Flatten, Dense
 
-# %%
 # Set the path to the directory containing the colored and natural coral reef images
-#data_dir = r'/kaggle/input/healthy-and-bleached-corals-image-classification'
-
-#import zipfile
-#with zipfile.ZipFile("/work/data/archive (1).zip") as zip_ref:
-#    zip_ref.extractall("data")
-
 # %%
 data_dir = "../src/data/"
+
 # %%
 def is_image_corrupted(image_path):
     try:
@@ -46,11 +35,10 @@ delete_corrupted_images(image_directory2)
 
 # %%
 # Define image dimensions, batch size, and train/test split ratio
-img_width, img_height = 150, 150
+img_width, img_height = 224, 224
 batch_size = 32
 validation_split = 0.2
 
-# %%
 # Create data generator with data augmentation
 datagen = ImageDataGenerator(
     rescale=1.0 / 255.0,
@@ -81,61 +69,47 @@ test_generator = datagen.flow_from_directory(
 )
 
 # %%
-# Create a CNN model
+# Load the pre-trained VGG16 model without the top (fully connected) layers
+vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(img_width, img_height, 3))
+
+# Freeze the pre-trained layers
+for layer in vgg_model.layers:
+    layer.trainable = False
+
+# Create a new model and add the pre-trained VGG16 model as a layer
 model = Sequential()
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(img_width, img_height, 3)))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(vgg_model)
+
+# Flatten the output of the VGG16 model
 model.add(Flatten())
-model.add(Dense(128, activation='relu'))
+
+# Add a fully connected layer and an output layer
+model.add(Dense(256, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 
-# %%
 # Compile the model
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
 # Train the model
 epochs = 10
 
-# %%
-H = model.fit_generator(
+model.fit(
     train_generator,
     steps_per_epoch=train_generator.samples // batch_size,
     epochs=epochs,
     validation_data=test_generator,
     validation_steps=test_generator.samples // batch_size
 )
-# %%
-def plot_history(H, epochs):
-    plt.style.use("fivethirtyeight")
-    plt.figure()
-    plt.plot(np.arange(0, epochs), H.history["loss"], label="train_loss")
-    plt.plot(np.arange(0, epochs), H.history["val_loss"], label="val_loss", linestyle=":")
-    plt.plot(np.arange(0, epochs), H.history["accuracy"], label="train_acc")
-    plt.plot(np.arange(0, epochs), H.history["val_accuracy"], label="val_acc", linestyle=":")
-    plt.title("Training Loss and Accuracy")
-    plt.xlabel("Epoch #")
-    plt.ylabel("Loss/Accuracy")
-    plt.tight_layout()
-    plt.legend()
-    plt.savefig("test.png", format="png") # specify filetype explicitly
-    plt.show()
-
-    plt.close()
-
-plot_history(H, 10)
 
 # %%
 # Evaluate the model on the test set
 _, accuracy = model.evaluate(test_generator)
 print(f"Test Accuracy: {accuracy * 100:.2f}%")
 
-
 # %%
-from sklearn.metrics import classification_report
 predictions = model.predict(train_generator, batch_size=128)
 
+# %%
 classification_report(train_generator.argmax(axis=1),
                             predictions.argmax(axis=1),
                             target_names=labelNames)
@@ -146,4 +120,33 @@ report_path = "../out/classification_report.txt"
 text_file = open(report_path, "w")
 n = text_file.write(report)
 text_file.close()
+
+# %%
+def plot_history(H, epochs):
+    plt.style.use("seaborn-colorblind")
+
+    plt.figure(figsize=(12,6))
+    plt.subplot(1,2,1)
+    plt.plot(np.arange(0, epochs), H.history["loss"], label="train_loss")
+    plt.plot(np.arange(0, epochs), H.history["val_loss"], label="val_loss", linestyle=":")
+    plt.title("Loss curve")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.tight_layout()
+    plt.legend()
+
+    plt.subplot(1,2,2)
+    plt.plot(np.arange(0, epochs), H.history["accuracy"], label="train_acc")
+    plt.plot(np.arange(0, epochs), H.history["val_accuracy"], label="val_acc", linestyle=":")
+    plt.title("Accuracy curve")
+    plt.xlabel("Epoch")
+    plt.ylabel("Accuracy")
+    plt.tight_layout()
+    plt.legend()
+    plt.savefig("../out/loss_accuracy_curve.png", format="png") # specify filetype explicitly
+    plt.show()
+
+    plt.close()
+
+plot_history(H, epochs)
 # %%
