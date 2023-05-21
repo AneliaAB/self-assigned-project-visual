@@ -11,6 +11,8 @@ import os
 #plotting
 import matplotlib.pyplot as plt
 import numpy as np
+#
+from sklearn.metrics import classification_report
 
 # Set the path to the directory containing the colored and natural coral reef images
 # %%
@@ -35,12 +37,12 @@ def delete_corrupted_images(directory):
 
 # %%
 # Set the path to the directory containing the images
-image_directory = '../src/data/bleached_corals/'
-image_directory2 = '../src/data/healthy_corals/'
+bleached_directory = '../src/data/bleached_corals/'
+healthy_directory = '../src/data/healthy_corals/'
 
 # Delete corrupted images
-delete_corrupted_images(image_directory)
-delete_corrupted_images(image_directory2)
+delete_corrupted_images(bleached_directory)
+delete_corrupted_images(healthy_directory)
 
 # %%
 # Define image dimensions, batch size, and train/test split ratio
