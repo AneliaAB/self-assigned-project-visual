@@ -3,4 +3,4 @@ keras==2.9
 zipfile36
 matplotlib
 numpy
--U scikit-learn
+scikit-learn

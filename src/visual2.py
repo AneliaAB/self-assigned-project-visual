@@ -4,11 +4,19 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import VGG16
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Flatten, Dense
+#loading and loading images
+import io
+from PIL import Image
+import os
+#plotting
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Set the path to the directory containing the colored and natural coral reef images
 # %%
 data_dir = "../src/data/"
 
+#deleting corrupted images 
 # %%
 def is_image_corrupted(image_path):
     try:
@@ -24,6 +32,7 @@ def delete_corrupted_images(directory):
         if is_image_corrupted(file_path):
             print(f"Deleting corrupted image: {filename}")
             os.remove(file_path)
+
 # %%
 # Set the path to the directory containing the images
 image_directory = '../src/data/bleached_corals/'
@@ -93,7 +102,7 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 # Train the model
 epochs = 10
 
-model.fit(
+H = model.fit(
     train_generator,
     steps_per_epoch=train_generator.samples // batch_size,
     epochs=epochs,
@@ -110,11 +119,29 @@ print(f"Test Accuracy: {accuracy * 100:.2f}%")
 predictions = model.predict(train_generator, batch_size=128)
 
 # %%
-classification_report(train_generator.argmax(axis=1),
-                            predictions.argmax(axis=1),
-                            target_names=labelNames)
+#_________________________________________________________________________________
+test_steps = len(test_generator)
+y_pred = model.predict(test_generator, steps=test_steps)
+y_pred = np.argmax(y_pred, axis=1)  # Convert probabilities to class labels
 
-#saving report to text file
+# Convert true labels from generator to array
+test_generator.reset()
+y_true = []
+for i in range(test_steps):
+    _, labels = test_generator.next()
+    y_true.extend(labels)
+y_true = np.array(y_true)
+
+# Reshape or convert labels to 1-dimensional arrays
+y_pred = y_pred.reshape(-1)
+y_true = y_true.reshape(-1)
+
+# Generate classification report
+target_names = ['Natural', 'Colored']
+report = classification_report(y_true, y_pred, target_names=target_names)
+
+print(report)
+
 report_path = "../out/classification_report.txt"
 
 text_file = open(report_path, "w")
@@ -143,7 +170,7 @@ def plot_history(H, epochs):
     plt.ylabel("Accuracy")
     plt.tight_layout()
     plt.legend()
-    plt.savefig("../out/loss_accuracy_curve.png", format="png") # specify filetype explicitly
+    plt.savefig("../out/loss_accuracy_curve_corals.png", format="png") # specify filetype explicitly
     plt.show()
 
     plt.close()
