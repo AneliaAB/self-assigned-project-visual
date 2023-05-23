@@ -152,11 +152,10 @@ print(f"Test Accuracy: {accuracy * 100:.2f}%")
 predictions = model.predict(train_generator, batch_size=128)
 
 # %%
-#_________________________________________________________________________________
 test_steps = len(test_generator)
 y_pred = model.predict(test_generator, steps=test_steps)
 y_pred = np.argmax(y_pred, axis=1)  # Convert probabilities to class labels
-
+# %%
 # Convert true labels from generator to array
 test_generator.reset()
 y_true = []
@@ -165,11 +164,13 @@ for i in range(test_steps):
     y_true.extend(labels)
 y_true = np.array(y_true)
 
+y_true
+# %%
 # Reshape or convert labels to 1-dimensional arrays
 y_pred = y_pred.reshape(-1)
 y_true = y_true.reshape(-1)
 
-# Generate classification report
+# Generating classification report
 print('Generating classification report.. find results in "out" folder')
 target_names = ['bleached_corals', 'healthy_corals']
 report = classification_report(y_true, y_pred, target_names=target_names)
