@@ -11,12 +11,13 @@ import os
 #plotting
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 #
 from sklearn.metrics import classification_report
 
 # Set the path to the directory containing the colored and natural coral reef images
 # %%
-data_dir = "../src/data/"
+data_dir = "../data/"
 
 #deleting corrupted images 
 # %%
@@ -37,12 +38,39 @@ def delete_corrupted_images(directory):
 
 # %%
 # Set the path to the directory containing the images
-bleached_directory = '../src/data/bleached_corals/'
-healthy_directory = '../src/data/healthy_corals/'
+bleached_directory = '../data/bleached_corals/'
+healthy_directory = '../data/healthy_corals/'
 
 # Delete corrupted images
 delete_corrupted_images(bleached_directory)
 delete_corrupted_images(healthy_directory)
+
+#%%
+#visualizing the data (https://problemsolvingwithpython.com/06-Plotting-with-Matplotlib/06.04-Saving-Plots/, https://www.kaggle.com/code/uysimty/keras-cnn-dog-or-cat-classification)
+def create_df(path_to_folder):
+    filenames = os.listdir(path_to_folder)
+
+    categories = []
+    for filename in filenames:
+        if path_to_folder == "data/bleached_corals":
+            categories.append(0)
+        else:
+            categories.append(1)
+
+    df = pd.DataFrame({
+        'filename': filenames,
+        'category': categories
+    })
+    
+    return df
+
+healthy_df = create_df("data/healthy_corals")
+bleached_df = create_df("data/bleached_corals")
+
+df = pd.concat([bleached_df, healthy_df])
+df_plt = df["category"].replace({0: 'bleached', 1: 'healthy'}).value_counts().plot.bar() 
+df_plt.figure.savefig("../out/visualizing_dataframe.png", dpi=300, bbox_inches='tight') # specify filetype explicitly
+
 
 # %%
 # Define image dimensions, batch size, and train/test split ratio
