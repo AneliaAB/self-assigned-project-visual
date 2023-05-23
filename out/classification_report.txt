@@ -1,8 +1,8 @@
-              precision    recall  f1-score   support
+                 precision    recall  f1-score   support
 
-     Natural       0.52      1.00      0.69        96
-     Colored       0.00      0.00      0.00        87
+bleached_corals       0.52      1.00      0.69        96
+ healthy_corals       0.00      0.00      0.00        87
 
-    accuracy                           0.52       183
-   macro avg       0.26      0.50      0.34       183
-weighted avg       0.28      0.52      0.36       183
+       accuracy                           0.52       183
+      macro avg       0.26      0.50      0.34       183
+   weighted avg       0.28      0.52      0.36       183

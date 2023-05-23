@@ -19,8 +19,10 @@ from sklearn.metrics import classification_report
 # %%
 data_dir = "../data/"
 
-#deleting corrupted images 
 # %%
+#deleting corrupted images 
+print('Deleting corrupted images')
+
 def is_image_corrupted(image_path):
     try:
         # Open the image file
@@ -37,22 +39,23 @@ def delete_corrupted_images(directory):
             os.remove(file_path)
 
 # %%
-# Set the path to the directory containing the images
+# path to the image directories
 bleached_directory = '../data/bleached_corals/'
 healthy_directory = '../data/healthy_corals/'
 
-# Delete corrupted images
+#Calling function on image folders
 delete_corrupted_images(bleached_directory)
 delete_corrupted_images(healthy_directory)
 
 #%%
-#visualizing the data (https://problemsolvingwithpython.com/06-Plotting-with-Matplotlib/06.04-Saving-Plots/, https://www.kaggle.com/code/uysimty/keras-cnn-dog-or-cat-classification)
+print('Visualizing dataframe.. Find barplot in "out" folder')
+#visualizing the data by categories (Kazarinoff & kaggle.com)
 def create_df(path_to_folder):
     filenames = os.listdir(path_to_folder)
 
     categories = []
     for filename in filenames:
-        if path_to_folder == "data/bleached_corals":
+        if path_to_folder == "../data/bleached_corals":
             categories.append(0)
         else:
             categories.append(1)
@@ -64,8 +67,8 @@ def create_df(path_to_folder):
     
     return df
 
-healthy_df = create_df("data/healthy_corals")
-bleached_df = create_df("data/bleached_corals")
+healthy_df = create_df("../data/healthy_corals")
+bleached_df = create_df("../data/bleached_corals")
 
 df = pd.concat([bleached_df, healthy_df])
 df_plt = df["category"].replace({0: 'bleached', 1: 'healthy'}).value_counts().plot.bar() 
@@ -167,7 +170,8 @@ y_pred = y_pred.reshape(-1)
 y_true = y_true.reshape(-1)
 
 # Generate classification report
-target_names = ['Natural', 'Colored']
+print('Generating classification report.. find results in "out" folder')
+target_names = ['bleached_corals', 'healthy_corals']
 report = classification_report(y_true, y_pred, target_names=target_names)
 
 print(report)
