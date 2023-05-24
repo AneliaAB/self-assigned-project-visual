@@ -12,7 +12,7 @@ The pretrained neural network VGG16 is initialized, and the data is split into t
 ## HOW TO INSTALL AND RUN THE PROJECT
 Initialize this repository:
 1. First you need to clone this repository 
-2. Your working repository should look like this:\
+2. Your working repository should look like this:
 
     self-assigned-project-visual\
     ├── data\
@@ -32,7 +32,7 @@ Install packages:
 4. Run the setup file, which will install all the requirements by writing ```bash setup.sh``` in the terminal
 
 Run the script:
-5. Navigate to the folder ```src``` of this projects repository by writing ```cd src``` in the terminal, assuming your current directory is **self-assigned-project-visual**
+5. Navigate to the folder ```src``` of this projects repository by writing ```cd src``` in the terminal, assuming your current directory is **self-assigned-project-visual**\
 6. Run the script by writing ```python corals_classification.py``` in the terminal
 
 After running the script, the results are saved in the ```out``` folder.
