@@ -12,30 +12,30 @@ The pretrained neural network VGG16 is initialized, and the data is split into t
 ## HOW TO INSTALL AND RUN THE PROJECT
 Initialize this repository:
 1. First you need to clone this repository 
-2. Your working repository should look like this:
-    self-assigned-project-visual
-    ├── data
-    | └── bleached_corals
-    | └── healthy_corals
-    ├── out
+2. Your working repository should look like this:\
 
-    ├── src
-    | └── corals_classfication.py
-    README.md
-    requirements.txt
-    setup.sh
+    self-assigned-project-visual\
+    ├── data\
+    | └── bleached_corals\
+    | └── healthy_corals\
+    ├── out\
+    ├── src\
+    | └── corals_classfication.py\
+    README.md\
+    requirements.txt\
+    setup.sh\
 
-Since I have already executed the script, the ´´´out´´´ folder will contain the final results: classification_report.txt, loss_accuracy_curve_corals.png, visualizing_dataframe.png
+Since I have already executed the script, the ```out``` folder will contain the final results: classification_report.txt, loss_accuracy_curve_corals.png, visualizing_dataframe.png
 
 Install packages:
-3. Navigate from the root of your working directory to ´´´self-assigned-project-visual´´´
-4. Run the setup file, which will install all the requirements by writing ´´´bash setup.sh´´´ in the terminal
+3. Navigate from the root of your working directory to ```self-assigned-project-visual```
+4. Run the setup file, which will install all the requirements by writing ```bash setup.sh``` in the terminal
 
 Run the script:
-5. Navigate to the folder ´´´src´´´ of this projects repository by writing ´´´cd src´´´ in the terminal, assuming your current directory is **self-assigned-project-visual**
-6. Run the script by writing ´´´python corals_classification.py´´´ in the terminal
+5. Navigate to the folder ```src``` of this projects repository by writing ```cd src``` in the terminal, assuming your current directory is **self-assigned-project-visual**
+6. Run the script by writing ```python corals_classification.py``` in the terminal
 
-After running the script, the results are saved in the ´´´out´´´ folder.
+After running the script, the results are saved in the ```out``` folder.
 
 ## Discussion of results
 **Dataset by category**
