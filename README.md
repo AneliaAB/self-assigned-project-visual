@@ -7,7 +7,7 @@ The dataset used for this project and details was acquired from Kaggle: https://
 
 ## METHODS
 Firstly, the data is cleaned by removing any corrupted images. To explore and learn more about the dataset, a bar plot is created to visualize the two categories, which shows an uneven number of healthy and bleached coral images. 
-The pretrained neural network VGG16 is initialized, and the data is split into train and test sets using data generator with data augmentation. The data is then fed to the pretrained model using ´´´model.fit´´´ and a classification report is generated. Additionally a loss and accuracy plot is created and saved in the out folder. 
+The pretrained neural network VGG16 is initialized, and the data is split into train and test sets using data generator with data augmentation. The data is then fed to the pretrained model using ```model.fit``` and a classification report is generated. Additionally a loss and accuracy plot is created and saved in the out folder. 
 
 ## HOW TO INSTALL AND RUN THE PROJECT
 Initialize this repository:
