@@ -4,7 +4,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import VGG16
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Flatten, Dense
-#loading and loading images
+#loading images
 import io
 from PIL import Image
 import os
@@ -12,29 +12,29 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-#
+#classification report
 from sklearn.metrics import classification_report
 
-# Set the path to the directory containing the colored and natural coral reef images
+# Path to the directory containing the images (both bleached and healthy)
 # %%
 data_dir = "../data/"
 
 # %%
-#deleting corrupted images 
+#deleting corrupted images (Stack Overflow, (n.d.))
 print('Deleting corrupted images')
 
 def is_image_corrupted(image_path):
     try:
         # Open the image file
         Image.open(image_path).verify()
-        return False  # Image is not corrupted
+        return False  # Returns false ir image is not corrupted
     except (IOError, SyntaxError):
-        return True  # Image is corrupted
+        return True  # Returns true if image is corrupted
 
 def delete_corrupted_images(directory):
     for filename in os.listdir(directory):
         file_path = os.path.join(directory, filename)
-        if is_image_corrupted(file_path):
+        if is_image_corrupted(file_path): #if it returns true -> deletes image
             print(f"Deleting corrupted image: {filename}")
             os.remove(file_path)
 
@@ -76,12 +76,12 @@ df_plt.figure.savefig("../out/visualizing_dataframe.png", dpi=300, bbox_inches='
 
 
 # %%
-# Define image dimensions, batch size, and train/test split ratio
+# Image dimensions, batch size, and train/test split ratio
 img_width, img_height = 224, 224
 batch_size = 32
 validation_split = 0.2
 
-# Create data generator with data augmentation
+#Creating data generator with data augmentation
 datagen = ImageDataGenerator(
     rescale=1.0 / 255.0,
     rotation_range=20,
@@ -93,7 +93,7 @@ datagen = ImageDataGenerator(
     validation_split=validation_split
 )
 
-# Load and split the data into train and test sets
+#Spliting the data into train and test sets
 train_generator = datagen.flow_from_directory(
     data_dir,
     target_size=(img_width, img_height),
@@ -111,28 +111,25 @@ test_generator = datagen.flow_from_directory(
 )
 
 # %%
-# Load the pre-trained VGG16 model without the top (fully connected) layers
-vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(img_width, img_height, 3))
+# Loading the pre-trained VGG16 model 
+vgg_model = VGG16(weights='imagenet', include_top=False, input_shape=(img_width, img_height, 3)) #not including fully connected top layes
 
-# Freeze the pre-trained layers
 for layer in vgg_model.layers:
     layer.trainable = False
 
-# Create a new model and add the pre-trained VGG16 model as a layer
+# Creating a new model and adding the pre-trained VGG16 model as a layer
 model = Sequential()
 model.add(vgg_model)
 
-# Flatten the output of the VGG16 model
 model.add(Flatten())
 
-# Add a fully connected layer and an output layer
 model.add(Dense(256, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 
-# Compile the model
+#Compiling
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-# Train the model
+#Number of epochs to train the model
 epochs = 10
 
 H = model.fit(
@@ -144,7 +141,7 @@ H = model.fit(
 )
 
 # %%
-# Evaluate the model on the test set
+# Evaluating the model on the test set
 _, accuracy = model.evaluate(test_generator)
 print(f"Test Accuracy: {accuracy * 100:.2f}%")
 
@@ -156,7 +153,7 @@ test_steps = len(test_generator)
 y_pred = model.predict(test_generator, steps=test_steps)
 y_pred = np.argmax(y_pred, axis=1)  # Convert probabilities to class labels
 # %%
-# Convert true labels from generator to array
+# Converting true labels from generator to array
 test_generator.reset()
 y_true = []
 for i in range(test_steps):
@@ -166,7 +163,7 @@ y_true = np.array(y_true)
 
 y_true
 # %%
-# Reshape or convert labels to 1-dimensional arrays
+#labels to 1-dimensional arrays
 y_pred = y_pred.reshape(-1)
 y_true = y_true.reshape(-1)
 
@@ -177,6 +174,7 @@ report = classification_report(y_true, y_pred, target_names=target_names)
 
 print(report)
 
+#Saving classification report as text file
 report_path = "../out/classification_report.txt"
 
 text_file = open(report_path, "w")
@@ -184,6 +182,7 @@ n = text_file.write(report)
 text_file.close()
 
 # %%
+#Histogram of model performance
 def plot_history(H, epochs):
     plt.style.use("seaborn-colorblind")
 
@@ -211,4 +210,3 @@ def plot_history(H, epochs):
     plt.close()
 
 plot_history(H, epochs)
-# %%
