@@ -29,22 +29,24 @@ Since I have already executed the script, the ```out``` folder will contain the 
 
 Install packages: <br />
 3. Navigate from the root of your working directory to ```self-assigned-project-visual``` <br />
+<br />
 4. Run the setup file, which will install all the requirements by writing ```bash setup.sh``` in the terminal <br />
 
 Run the script: <br />
 5. Navigate to the folder ```src``` of this projects repository by writing ```cd src``` in the terminal, assuming your current directory is **self-assigned-project-visual** <br />
+<br />
 6. Run the script by writing ```python corals_classification.py``` in the terminal <br />
 
 After running the script, the results are saved in the ```out``` folder.
 
 ## Discussion of results
-**Dataset by category**
+**Dataset by category** <br />
 The number of bleached coral images is slightly higher than the number of healthy coral images.
 
-**Classification report**
+**Classification report** <br />
 The classification report shows that the classifier is performing well at identifying bleached corals, however it is unable to identify healthy corals. Initially I though that the there was a problem with reading the classes, however the imageDataGenerator is able to identify 2 classes and support also shows 87 instances of “healthy_corals”. The issue might be in my approach and the choice of classifier. In visualizing_dataframe.png it also becomes evident that there is a slight difference in the number of images for bleached and healthy corals, which might cause imbalance in class distribution.
 
-**Loss and accuracy curve**
+**Loss and accuracy curve** <br />
 Ideally the loss curve would decrease and the gap between train and validation loss would close. However, this is not the case for this classifier. The gap between both curves remains, which might indicate that the training dataset is too small relative to the validation dataset (Brownlee, 2019).
 
 ## Literature
