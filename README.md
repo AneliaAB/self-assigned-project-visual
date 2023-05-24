@@ -27,13 +27,13 @@ Initialize this repository:
 
 Since I have already executed the script, the ```out``` folder will contain the final results: classification_report.txt, loss_accuracy_curve_corals.png, visualizing_dataframe.png
 
-Install packages:
-3. Navigate from the root of your working directory to ```self-assigned-project-visual```
-4. Run the setup file, which will install all the requirements by writing ```bash setup.sh``` in the terminal
+Install packages: <br />
+3. Navigate from the root of your working directory to ```self-assigned-project-visual``` <br />
+4. Run the setup file, which will install all the requirements by writing ```bash setup.sh``` in the terminal <br />
 
-Run the script:
-5. Navigate to the folder ```src``` of this projects repository by writing ```cd src``` in the terminal, assuming your current directory is **self-assigned-project-visual**\
-6. Run the script by writing ```python corals_classification.py``` in the terminal
+Run the script: <br />
+5. Navigate to the folder ```src``` of this projects repository by writing ```cd src``` in the terminal, assuming your current directory is **self-assigned-project-visual** <br />
+6. Run the script by writing ```python corals_classification.py``` in the terminal <br />
 
 After running the script, the results are saved in the ```out``` folder.
 
